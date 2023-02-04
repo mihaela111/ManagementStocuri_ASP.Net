@@ -54,12 +54,43 @@ namespace ManagementStocuri.Repository
         {
             offerModel.IDOffer=Guid.NewGuid();
             dbContext.Offers.Add(MapModelToDbObject(offerModel));
+            dbContext.SaveChanges();
+            
+
         }
 
         //update
 
+        public void UpdateOffer(OfferModel offerModel)
+        {
+            Offer offer = dbContext.Offers.FirstOrDefault(x => x.Idoffer == offerModel.IDOffer);
+            if(offer!=null)
+            {
+                offer.Idoffer = offerModel.IDOffer;
+                offer.ValidFrom = offerModel.ValidFrom;
+                offer.ValidTo = offerModel.ValidTo;
+                offer.Name = offerModel.Name;
+                offer.Description = offerModel.Description;
+                offer.Discount = offerModel.Discount;
+
+            }
+            dbContext.SaveChanges();
+        }
+
+   
+
         //delete
 
+        public void DeleteOffer(Guid id)
+        {
+            Offer offer=dbContext.Offers.FirstOrDefault(x => x.Idoffer == id);
+            if (offer != null)
+            {
+                dbContext.Offers.Remove(offer);
+
+            }
+            dbContext.SaveChanges();
+        }
         
         //mappers
         private OfferModel MapDbObjectToModel(Offer dbOffer)

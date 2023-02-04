@@ -39,6 +39,7 @@ namespace ManagementStocuri.Repository
         {
             customerModel.IDCustomer=Guid.NewGuid();
             dbContext.Customers.Add(MapModelToDbObject(customerModel));
+            dbContext.SaveChanges();
         }
 
 

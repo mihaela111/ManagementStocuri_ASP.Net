@@ -42,6 +42,7 @@ namespace ManagementStocuri.Repository
         {
             orderModel.IDOrder=Guid.NewGuid();
             dbContext.Orders.Add(MapModelToDbObject(orderModel));
+            dbContext.SaveChanges();
         }
 
         //update

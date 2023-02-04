@@ -1,0 +1,53 @@
+﻿@model ManagementStocuri.Models.OfferModel
+
+@{
+    ViewData["Title"] = "OfferDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>OfferDetails</h1>
+
+<div>
+    <h4>OfferModel</h4>
+    <hr />
+    <dl class="row">
+
+        <dd class = "col-sm-10" hidden >
+            @Html.HiddenFor(model => model.IDOffer)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ValidFrom)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ValidFrom)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ValidTo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ValidTo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Discount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Discount)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IDOffer }) |
+    <a asp-action="Index">Back to List</a>
+</div>
