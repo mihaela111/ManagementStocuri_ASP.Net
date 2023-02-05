@@ -19,6 +19,7 @@ namespace ManagementStocuri.Repository
             this.dbContext = dbContext;
         }
 
+        //select all
 
         public List<CustomerModel>GetAllCustomers()
         {
@@ -30,11 +31,13 @@ namespace ManagementStocuri.Repository
             return customerList;
         }
 
+        //select by id
         public CustomerModel GetCustomerByID(Guid ID)
         {
             return MapDbObjectToModel(dbContext.Customers.FirstOrDefault(x => x.Idcustomer == ID));
         }
 
+        //add
         public void InsertCustomer(CustomerModel customerModel)
         {
             customerModel.IDCustomer=Guid.NewGuid();
@@ -42,6 +45,32 @@ namespace ManagementStocuri.Repository
             dbContext.SaveChanges();
         }
 
+        //update
+        public void UpdateCustomer(CustomerModel customerModel)
+        {
+            Customer customer=dbContext.Customers.FirstOrDefault(x=>x.Idcustomer==customerModel.IDCustomer);
+            if(customer!=null)
+            {
+                customer.Idcustomer=customerModel.IDCustomer;
+                customer.Name=customerModel.Name;
+                customer.Title=customerModel.Title;
+                customer.Phone=customerModel.Phone;
+                customer.Email=customerModel.Email;
+                customer.Adress=customerModel.Adress;
+            }
+            dbContext.SaveChanges();
+        }
+
+        //delete
+        public void DeleteCustomer(Guid id)
+        {
+            Customer customer= dbContext.Customers.FirstOrDefault(x=>x.Idcustomer==id);
+            if(customer !=null)
+            {
+                dbContext.Customers.Remove(customer);
+            }
+            dbContext.SaveChanges();
+        }
 
         //mappers
         private CustomerModel MapDbObjectToModel(Customer dbCustomer)

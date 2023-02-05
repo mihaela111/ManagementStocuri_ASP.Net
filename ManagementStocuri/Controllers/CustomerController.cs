@@ -1,9 +1,11 @@
 ﻿using ManagementStocuri.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManagementStocuri.Controllers
 {
+    [Authorize(Roles="User")]
     public class CustomerController : Controller
     {
         private Repository.CustomerRepository _customerRepository;
@@ -16,13 +18,15 @@ namespace ManagementStocuri.Controllers
         // GET: CustomerController
         public ActionResult Index()
         {
-            return View();
+            var customer=_customerRepository.GetAllCustomers();
+            return View("Index", customer);
         }
 
         // GET: CustomerController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(Guid id)
         {
-            return View();
+            var model = _customerRepository.GetCustomerByID(id);
+            return View("CustomerDetails", model);
         }
 
         // GET: CustomerController/Create
@@ -60,44 +64,63 @@ namespace ManagementStocuri.Controllers
         }
 
         // GET: CustomerController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
-            return View();
+            var model = _customerRepository.GetCustomerByID(id);
+            return View("EditCustomer",model);
+            
         }
 
         // POST: CustomerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Guid id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var model =new Models.CustomerModel();
+
+                var task= TryUpdateModelAsync(model);
+                task.Wait();
+                if(task.Result)
+                {
+                    _customerRepository.UpdateCustomer(model);
+                    return RedirectToAction("Index");
+
+                }
+                else
+                {
+                    return RedirectToAction("Index", id);
+                }
+
+                
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", id);
             }
         }
 
         // GET: CustomerController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
-            return View();
+            var model = _customerRepository.GetCustomerByID(id);
+            return View("DeleteCustomer", model);
         }
 
         // POST: CustomerController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(Guid id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _customerRepository.DeleteCustomer(id);
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return RedirectToAction("DeleteCustomer", id);
             }
         }
     }

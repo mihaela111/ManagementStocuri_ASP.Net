@@ -1,4 +1,5 @@
 ﻿using ManagementStocuri.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,14 +27,17 @@ namespace ManagementStocuri.Controllers
         }
 
         // GET: ProductController1/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
+
             return View("CreateProduct");
         }
 
         // POST: ProductController1/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(IFormCollection collection)
         {
             try

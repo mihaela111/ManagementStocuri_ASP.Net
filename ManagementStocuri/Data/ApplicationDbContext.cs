@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ManagementStocuri.Data
 {
-    public partial class ApplicationDbContext : DbContext
+    public partial class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext()
         {
@@ -40,6 +40,7 @@ namespace ManagementStocuri.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<AspNetRole>(entity =>
             //{
             //    entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")

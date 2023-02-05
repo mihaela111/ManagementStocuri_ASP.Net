@@ -1,4 +1,5 @@
 ﻿using ManagementStocuri.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,14 +31,21 @@ namespace ManagementStocuri.Controllers
         }
 
         // GET: OfferController/Create
+        [Authorize(Roles="Admin")]
         public ActionResult Create()
         {
-            return View("CreateOffer");
+            var model= new Models.OfferModel();
+            if(User.Identity.IsAuthenticated)
+            {
+                model.Description = User.Identity.Name;
+            }
+            return View("CreateOffer", model);
         }
 
         // POST: OfferController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(IFormCollection collection)
         {
             try

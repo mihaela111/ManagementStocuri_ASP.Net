@@ -37,17 +37,7 @@ namespace ManagementStocuri.Repository
             return MapDbObjectToModel(dbContext.Offers.FirstOrDefault(x => x.Idoffer == ID));
         }
 
-        //disable because column .eventDate is missing
-     /*   public List<OfferModel> GetOffersByEffectiveDates (DateTime ValidFrom, DateTime ValidTo)
-        {
-            List<OfferModel> offerList= new List<OfferModel>();
-            foreach(Offer dbOffer in dbContext.Offers.Where(x=>x.Equals(ValidFrom)))
-            {
-                offerList.Add(MapDbObjectToModel(dbOffer));
-            }
-            return offerList;
-        }
-     */
+
 
         //add
      public void InsertOffer(OfferModel offerModel)
