@@ -46,8 +46,50 @@ namespace ManagementStocuri.Repository
         }
 
         //update
+        public void UpdateProduct(ProductModel productModel)
+        {
+            Product product=dbContext.Products.FirstOrDefault(x => x.Idproduct == productModel.IDProduct);
+            if(product!=null)
+            {
+                product.Idproduct=productModel.IDProduct;
+                product.Idsupplier=productModel.IDSupplier;
+                product.Name=productModel.Name;
+                product.Category=productModel.Category;
+                product.Description=productModel.Description;
+                product.Quantity=productModel.Quantity;
+                product.PriceBuy=productModel.PriceBuy;
+                product.PriceSell=productModel.PriceSell;
+            }
+            dbContext.SaveChanges();
+        }
+
+        public void UpdateProduct(ProductModel productModel, int quantity)
+        {
+            Product product = dbContext.Products.FirstOrDefault(x => x.Idproduct == productModel.IDProduct);
+            if (product != null)
+            {
+                int finalQuantity=product.Quantity;
+                finalQuantity = finalQuantity - quantity;
+
+                product.Quantity = finalQuantity;
+
+            }
+            dbContext.SaveChanges();
+
+        }
+
 
         //delete
+        public void DeleteProduct(Guid id)
+        {
+            Product product = dbContext.Products.FirstOrDefault(x => x.Idproduct == id);
+            if (product != null)
+            {
+                dbContext.Products.Remove(product);
+
+            }
+            dbContext.SaveChanges();
+        }
 
 
         //mappers

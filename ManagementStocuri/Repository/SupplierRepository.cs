@@ -51,9 +51,33 @@ namespace ManagementStocuri.Repository
 
 
         //update
+        public void UpdateSupplier(SupplierModel supplierModel)
+        {
+            Supplier supplier=dbContext.Suppliers.FirstOrDefault(x=>x.Idsupplier==supplierModel.IDSupplier);
+            if(supplier!=null)
+            {
+                supplier.Idsupplier=supplierModel.IDSupplier;
+                supplier.Name=supplierModel.Name;
+                supplier.Phone=supplierModel.Phone;
+                supplier.Email=supplierModel.Email;
+                supplier.Adress=supplierModel.Adress;
+            }
+            dbContext.SaveChanges();
+        }
+
 
 
         //delete
+        public void DeleteSupplier(Guid id)
+        {
+            Supplier supplier = dbContext.Suppliers.FirstOrDefault(x => x.Idsupplier == id);
+            if (supplier != null)
+            {
+                dbContext.Suppliers.Remove(supplier);
+
+            }
+            dbContext.SaveChanges();
+        }
 
 
         //mappers

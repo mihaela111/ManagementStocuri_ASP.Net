@@ -10,22 +10,26 @@ namespace ManagementStocuri.Controllers
     {
 
         private Repository.OrderRepository _orderRepository;
+        private Repository.ProductRepository _productRepository;
 
         public OrderController(ApplicationDbContext dbContext)
         {
             _orderRepository = new Repository.OrderRepository(dbContext);
+           _productRepository = new Repository.ProductRepository(dbContext);
         }
 
         // GET: OrderController
         public ActionResult Index()
         {
-            return View();
+            var order=_orderRepository.GetAllOrders();
+            return View("Index", order);
         }
 
         // GET: OrderController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(Guid id)
         {
-            return View();
+            var model= _orderRepository.GetOrderByID(id);
+            return View("OrderDetails", model);
         }
 
         // GET: OrderController/Create
@@ -44,11 +48,17 @@ namespace ManagementStocuri.Controllers
             try
             {
                 Models.OrderModel model = new Models.OrderModel();
+             
+                
                 var task=TryUpdateModelAsync(model);
                 task.Wait();
                 if(task.Result)
                 {
+
+                    var productModel = _productRepository.GetProductByID(model.IDProduct);
+                    _productRepository.UpdateProduct(productModel, model.Quantity);
                     _orderRepository.InsertOrder(model);
+                    
 
                 }
                 return View("CreateOrder");
@@ -62,44 +72,56 @@ namespace ManagementStocuri.Controllers
         }
 
         // GET: OrderController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
-            return View();
+            var model = _orderRepository.GetOrderByID(id);
+            return View("EditOrder",model);
         }
 
         // POST: OrderController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Guid id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var model = new Models.OrderModel();
+                var task= TryUpdateModelAsync(model);
+                task.Wait();
+                if (task.Result)
+                {
+                    _orderRepository.UpdateOrder(model);
+                }
+                return View("CreateOrder");
+                
             }
             catch
             {
-                return View();
+                return View("CreateOrder");
             }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: OrderController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
-            return View();
+            var model= _orderRepository.GetOrderByID(id);
+            return View("DeleteOrder", model);
         }
 
         // POST: OrderController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(Guid id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _orderRepository.DeleteOrder(id);
+                return View("DeleteOrder");
             }
             catch
             {
-                return View();
+                return View("DeleteOrder");
             }
         }
     }

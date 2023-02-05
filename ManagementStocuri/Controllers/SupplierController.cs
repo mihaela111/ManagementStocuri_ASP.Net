@@ -18,13 +18,16 @@ namespace ManagementStocuri.Controllers
         // GET: SupplierController
         public ActionResult Index()
         {
-            return View();
+            var suppliers=_supplierRepository.GetAllSuppliers();
+
+            return View("Index", suppliers);
         }
 
         // GET: SupplierController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(Guid id)
         {
-            return View();
+            var model=_supplierRepository.GetSupplierByID(id);
+            return View("SupplierDetails", model);
         }
 
         // GET: SupplierController/Create
@@ -61,9 +64,10 @@ namespace ManagementStocuri.Controllers
         }
 
         // GET: SupplierController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
-            return View();
+            var model=_supplierRepository.GetSupplierByID(id);
+            return View("EditSupplier", model);
         }
 
         // POST: SupplierController/Edit/5
@@ -73,32 +77,49 @@ namespace ManagementStocuri.Controllers
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var model = new Models.SupplierModel(); 
+                var task=TryUpdateModelAsync(model);
+                task.Wait();
+                if (task.Result) 
+                { 
+                    _supplierRepository.UpdateSupplier(model);
+                    return RedirectToAction("Index");
+                }  
+                else
+                {
+                    return RedirectToAction("Index", id);
+                }
+               
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", id);
             }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: SupplierController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
-            return View();
+            var model = _supplierRepository.GetSupplierByID(id);
+            return View("DeleteSupplier", id);
         }
 
         // POST: SupplierController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(Guid id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _supplierRepository.DeleteSupplier(id);
+                return View("DeleteSupplier");
+
+                
             }
             catch
             {
-                return View();
+                return View("DeleteSupplier");
             }
         }
     }

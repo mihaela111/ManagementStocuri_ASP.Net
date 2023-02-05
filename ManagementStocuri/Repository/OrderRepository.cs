@@ -47,9 +47,37 @@ namespace ManagementStocuri.Repository
 
         //update
 
+        public void UpdateOrder(OrderModel orderModel)
+        {
+            Order order = dbContext.Orders.FirstOrDefault(x => x.Idorder == orderModel.IDOrder);
+            if(order != null)
+            {
+                order.Idorder = orderModel.IDOrder;
+                order.Idcustomer= orderModel.IDCustomer;
+                order.Idproduct=orderModel.IDProduct;
+                order.OrderDate = orderModel.OrderDate;
+                order.Quantity = orderModel.Quantity;
+                order.IsShipped = orderModel.IsShipped;
+
+            }
+            dbContext.SaveChanges();
+
+
+        }
+
+
         //delete
 
+        public void DeleteOrder(Guid id)
+        {
+            Order order = dbContext.Orders.FirstOrDefault(x => x.Idorder == id);
+            if (order != null)
+            {
+                dbContext.Orders.Remove(order);
 
+            }
+            dbContext.SaveChanges();
+        }
         //mappers
         private OrderModel MapDbObjectToModel(Order dbOrder)
         {

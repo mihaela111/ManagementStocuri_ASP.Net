@@ -17,13 +17,16 @@ namespace ManagementStocuri.Controllers
         // GET: ProductController1
         public ActionResult Index()
         {
-            return View();
+            var products=_productRepository.GetAllProducts();
+            return View("Index", products);
         }
 
         // GET: ProductController1/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(Guid id)
         {
-            return View();
+            var model = _productRepository.GetProductByID(id);
+
+            return View("ProductDetails", model);
         }
 
         // GET: ProductController1/Create
@@ -62,44 +65,65 @@ namespace ManagementStocuri.Controllers
         }
 
         // GET: ProductController1/Edit/5
-        public ActionResult Edit(int id)
+        [Authorize(Roles = "Admin")]
+        public ActionResult Edit(Guid id)
         {
-            return View();
+            var model = _productRepository.GetProductByID(id);
+            return View("EditProduct", model);
         }
 
         // POST: ProductController1/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var model = new Models.ProductModel();
+                var task=TryUpdateModelAsync(model);
+                task.Wait();
+                if (task.Result)
+                {
+                    _productRepository.UpdateProduct(model);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return RedirectToAction("Index", id);
+                }
+                
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", id);
             }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: ProductController1/Delete/5
-        public ActionResult Delete(int id)
+        [Authorize(Roles = "Admin")]
+        public ActionResult Delete(Guid id)
         {
-            return View();
+            var model=_productRepository.GetProductByID(id);
+            return View("DeleteProduct", model);
         }
 
         // POST: ProductController1/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [Authorize(Roles = "Admin")]
+        public ActionResult Delete(Guid id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _productRepository.DeleteProduct(id);
+                return View("DeleteProduct");
+
             }
             catch
             {
-                return View();
+                return View("DeleteProduct");
             }
         }
     }

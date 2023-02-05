@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ManagementStocuri.Controllers
 {
-    [Authorize(Roles="User")]
+    [Authorize(Roles="User, Admin")]
     public class CustomerController : Controller
     {
         private Repository.CustomerRepository _customerRepository;
